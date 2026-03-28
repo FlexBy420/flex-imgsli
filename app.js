@@ -6,8 +6,8 @@ let scale = 1;
 let translateX = 0;
 let translateY = 0;
 
-let action = 'none';
-let sliderX = 600;
+let action = 'none'; 
+let sliderPercent = 50;
 let startMouseX = 0, startMouseY = 0;
 let startTransX = 0, startTransY = 0;
 
@@ -29,17 +29,14 @@ function init() {
     magL = document.getElementById('mag-sbs-left');
     magR = document.getElementById('mag-sbs-right');
 
-    if (!shroud) {
-        console.error("Error: Main container viewer-shroud not found!");
-        return;
-    }
+    if (!shroud) return;
 
     buildGameNav();
     loadGame(0);
     setupEventListeners();
-    updateSlider(600);
+    refreshSlider();
+    window.addEventListener('resize', refreshSlider);
 }
-
 function buildGameNav() {
     const nav = document.getElementById('game-nav');
     if (!nav) return;
@@ -94,6 +91,7 @@ function loadScene(sceneIdx) {
     if (sceneBtn) sceneBtn.classList.add('active');
 
     resetZoomAndPan();
+    setTimeout(refreshSlider, 50);
 }
 
 function applyTransform() {
@@ -108,13 +106,18 @@ function resetZoomAndPan() {
     applyTransform();
 }
 
-function updateSlider(x) {
+function updateSliderByPixels(mouseX) {
     const rect = shroud.getBoundingClientRect();
+    let x = mouseX - rect.left;
     x = Math.max(0, Math.min(x, rect.width));
-    sliderX = x;
-    const percent = (x / rect.width) * 100;
-    elSliderClipper.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
-    elHandle.style.left = x + "px";
+    sliderPercent = (x / rect.width) * 100;
+    refreshSlider();
+}
+
+function refreshSlider() {
+    if (!elSliderClipper || !elHandle) return;
+    elSliderClipper.style.clipPath = `inset(0 ${100 - sliderPercent}% 0 0)`;
+    elHandle.style.left = `${sliderPercent}%`;
 }
 
 function handleMagnifierLogic(e) {
@@ -135,16 +138,18 @@ function handleMagnifierLogic(e) {
 
         if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
             magMain.style.display = 'block';
-            magMain.style.left = (x - 90) + "px";
-            magMain.style.top = (y - 90) + "px";
+            magMain.style.left = (x - 110) + "px";
+            magMain.style.top = (y - 110) + "px";
 
             const unscaledX = (x - translateX) / scale;
             const unscaledY = (y - translateY) / scale;
-            const activeImg = (x < sliderX) ? pathA : pathB;
+
+            const currentMousePercent = (x / rect.width) * 100;
+            const activeImg = (currentMousePercent < sliderPercent) ? pathA : pathB;
 
             magMain.style.backgroundImage = `url(${activeImg})`;
             magMain.style.backgroundSize = `${rect.width * scale * 2}px ${rect.height * scale * 2}px`;
-            magMain.style.backgroundPosition = `-${(unscaledX * scale * 2) - 90}px -${(unscaledY * scale * 2) - 90}px`;
+            magMain.style.backgroundPosition = `-${(unscaledX * scale * 2) - 110}px -${(unscaledY * scale * 2) - 110}px`;
         } else {
             magMain.style.display = 'none';
         }
@@ -158,14 +163,14 @@ function handleMagnifierLogic(e) {
             const y = e.clientY - paneRect.top;
 
             [magL, magR].forEach((m, i) => {
-                m.style.left = (x - 90) + "px";
-                m.style.top = (y - 90) + "px";
+                m.style.left = (x - 110) + "px";
+                m.style.top = (y - 110) + "px";
                 const unscaledX = (x - translateX) / scale;
                 const unscaledY = (y - translateY) / scale;
                 const img = (i === 0) ? pathA : pathB;
                 m.style.backgroundImage = `url(${img})`;
                 m.style.backgroundSize = `${paneRect.width * scale * 2}px ${paneRect.height * scale * 2}px`;
-                m.style.backgroundPosition = `-${(unscaledX * scale * 2) - 90}px -${(unscaledY * scale * 2) - 90}px`;
+                m.style.backgroundPosition = `-${(unscaledX * scale * 2) - 110}px -${(unscaledY * scale * 2) - 110}px`;
             });
         } else {
             hideAllMags();
@@ -176,9 +181,10 @@ function handleMagnifierLogic(e) {
 function setupEventListeners() {
     shroud.addEventListener('mousedown', e => {
         const rect = shroud.getBoundingClientRect();
-        const x = e.clientX - rect.left;
+        const mouseX = e.clientX - rect.left;
+        const currentSliderPx = (sliderPercent / 100) * rect.width;
 
-        if (viewMode === 'slider' && Math.abs(x - sliderX) < 40) {
+        if (viewMode === 'slider' && Math.abs(mouseX - currentSliderPx) < 40) {
             action = 'slider';
         } else {
             action = 'pan';
@@ -192,8 +198,7 @@ function setupEventListeners() {
 
     window.addEventListener('mousemove', e => {
         if (action === 'slider') {
-            const rect = shroud.getBoundingClientRect();
-            updateSlider(e.clientX - rect.left);
+            updateSliderByPixels(e.clientX);
         } else if (action === 'pan') {
             translateX = startTransX + (e.clientX - startMouseX);
             translateY = startTransY + (e.clientY - startMouseY);
