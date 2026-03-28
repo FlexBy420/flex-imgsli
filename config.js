@@ -37,12 +37,12 @@ const CONFIG = {
                 {
                     name: 'Scene 1 (Resolution with MSAA)',
                     folder: '1',
-                    labels: ['100%', '300%']
+                    labels: ['100', '300']
                 },
                 {
                     name: 'Scene 1 (Resolution without MSAA)',
                     folder: '3',
-                    labels: ['100%', '300%']
+                    labels: ['100', '300']
                 }
             ]
         }
