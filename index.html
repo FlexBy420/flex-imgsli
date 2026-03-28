@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Compare</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <h3>GALLERY</h3>
+            <div id="game-nav" class="vertical-nav"></div>
+        </aside>
+
+        <main class="content">
+            <div id="scene-nav" class="nav-bar"></div>
+
+            <div class="controls">
+                <button id="viewBtn" onclick="toggleViewMode()">Mode: SLIDER</button>
+                <button id="magBtn" onclick="toggleMagnifier()">Magnifier (Z)</button>
+                <button onclick="resetZoomAndPan()">Reset View (R)</button>
+            </div>
+
+            <div id="viewer-shroud">
+                <div id="label-left" class="res-label res-left"></div>
+                <div id="label-right" class="res-label res-right"></div>
+
+                <div id="slider-view">
+                    <div id="slider-base-viewport" class="pan-viewport">
+                        <div id="img-base" class="img-content"></div>
+                    </div>
+                    <div id="slider-overlay-clipper">
+                        <div id="slider-overlay-viewport" class="pan-viewport">
+                            <div id="img-overlay" class="img-content"></div>
+                        </div>
+                    </div>
+
+                    <div id="slider-handle" class="slider-handle"></div>
+                    <div id="mag-main" class="magnifier"></div>
+                </div>
+
+                <div id="sbs-view">
+                    <div class="sbs-pane">
+                        <div id="sbs-left" class="sbs-img"></div>
+                        <div id="mag-sbs-left" class="magnifier"></div>
+                    </div>
+                    <div class="sbs-pane">
+                        <div id="sbs-right" class="sbs-img"></div>
+                        <div id="mag-sbs-right" class="magnifier"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                Scroll: Zoom | Drag: Move Image | Z: Magnifier | V: View | R: Reset
+            </div>
+        </main>
+    </div>
+    <div class="creator-tag">
+        Created by <a href="https://github.com/FlexBy420" target="_blank">FlexBy</a>
+    </div>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
