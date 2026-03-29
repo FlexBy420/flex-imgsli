@@ -79,6 +79,22 @@ const CONFIG = {
                     ]
                 }
             ]
+        },
+        {
+            name: 'Skate 3 (RPCS3)',
+            scenes: [
+                {
+                    name: 'Scene 1',
+                    images: [
+                        { path: 'img/sk3/1/100.png', label: '100% (No MSAA)' },
+                        { path: 'img/sk3/1/200.png', label: '200% (No MSAA)' },
+                        { path: 'img/sk3/1/300.png', label: '300% (No MSAA)' },
+                        { path: 'img/sk3/1/400.png', label: '400% (No MSAA)' },
+                        { path: 'img/sk3/1/500.png', label: '500% (No MSAA)' },
+                        { path: 'img/sk3/1/600.png', label: '600% (No MSAA)' }
+                    ]
+                }
+            ]
         }
     ]
 };
