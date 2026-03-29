@@ -21,6 +21,17 @@ const CONFIG = {
                         { path: 'img/uc1/1/720.png', label: '720p (No MSAA)' },
                         { path: 'img/uc1/1/2160.png', label: '2160p (No MSAA)' }
                     ]
+                },
+                {
+                    name: 'Plane-wrecked',
+                    images: [
+                        { path: 'img/uc1/2/720_msaa.png', label: '720p (With MSAA)' },
+                        { path: 'img/uc1/2/720_nomsaa.png', label: '720p (No MSAA)' },
+                        { path: 'img/uc1/2/1440_nomsaa.png', label: '1440p (No MSAA)' },
+                        { path: 'img/uc1/2/2160_nomsaa.png', label: '2160p (No MSAA)' },
+                        { path: 'img/uc1/2/2880_nomsaa.png', label: '2880p (No MSAA)' },
+                        { path: 'img/uc1/2/3600_nomsaa.png', label: '3600p (No MSAA)' }
+                    ]
                 }
             ]
         },
