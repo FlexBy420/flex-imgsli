@@ -63,6 +63,22 @@ const CONFIG = {
                     ]
                 }
             ]
+        },
+        {
+            name: 'Dark Souls 2 (RPCS3)',
+            scenes: [
+                {
+                    name: 'Scene 1',
+                    images: [
+                        { path: 'img/ds2/1/100.png', label: '100%' },
+                        { path: 'img/ds2/1/200.png', label: '200%' },
+                        { path: 'img/ds2/1/300.png', label: '300%' },
+                        { path: 'img/ds2/1/400.png', label: '400%' },
+                        { path: 'img/ds2/1/500.png', label: '500%' },
+                        { path: 'img/ds2/1/600.png', label: '600%' }
+                    ]
+                }
+            ]
         }
     ]
 };
