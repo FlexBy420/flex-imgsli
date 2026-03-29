@@ -5,56 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Compare</title>
     <link rel="stylesheet" href="style.css">
+    <meta name="title" content="Image Compare Pro">
+    <meta name="description" content="Interactive tool for comparing game screenshots and graphics quality. Features slider and side-by-side modes with zoom and magnifier.">
+    <meta name="keywords" content="image compare, graphics comparison, screenshot slider, gaming, comparison tool">
 </head>
 <body>
-
+    <div id="mobile-warning">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+        <h2>Desktop Recommended</h2>
+        <p>This comparison image tool requires a mouse and a larger screen.<br>Please visit on a desktop device for the best experience.</p>
+    </div>
     <div class="main-layout">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <h3>GALLERY</h3>
-            <div id="game-nav" class="vertical-nav"></div>
+            <div id="game-nav" class="vertical-nav">
+                </div>
         </aside>
-
         <main class="content">
-            <div id="scene-nav" class="nav-bar"></div>
-
-            <div class="controls">
-                <button id="viewBtn" onclick="toggleViewMode()">Mode: SLIDER</button>
-                <button id="magBtn" onclick="toggleMagnifier()">Magnifier (Z)</button>
-                <button onclick="resetZoomAndPan()">Reset View (R)</button>
-            </div>
-
-            <div id="viewer-shroud">
-                <div id="label-left" class="res-label res-left"></div>
-                <div id="label-right" class="res-label res-right"></div>
-
-                <div id="slider-view">
-                    <div id="slider-base-viewport" class="pan-viewport">
-                        <div id="img-base" class="img-content"></div>
+            <div id="home-view" class="home-container">
+                <h1>Image Compare</h1>
+                <p>Select a game from the gallery to start comparing graphics.</p>
+                <div id="home-game-grid" class="game-grid">
                     </div>
-                    <div id="slider-overlay-clipper">
-                        <div id="slider-overlay-viewport" class="pan-viewport">
-                            <div id="img-overlay" class="img-content"></div>
+            </div>
+            <div id="app-view" style="display: none; width: 100%; height: 100%; flex-direction: column; align-items: center;">
+                <div class="controls">
+                    <button id="menuBtn" onclick="toggleSidebar()">☰ Menu</button>
+                    <button onclick="goHome()">🏠 Home</button>
+                    <div class="separator"></div>
+                    <button id="viewBtn" onclick="toggleViewMode()">Mode: SLIDER</button>
+                    <button id="magBtn" onclick="toggleMagnifier()">Magnifier (Z)</button>
+                    <button onclick="resetZoomAndPan()">Reset View (R)</button>
+                </div>
+                <div id="viewer-shroud">
+                    <div id="label-left" class="res-label res-left"></div>
+                    <div id="label-right" class="res-label res-right"></div>
+
+                    <div id="slider-view">
+                        <div id="slider-base-viewport" class="pan-viewport">
+                            <div id="img-base" class="img-content"></div>
+                        </div>
+                        <div id="slider-overlay-clipper">
+                            <div id="slider-overlay-viewport" class="pan-viewport">
+                                <div id="img-overlay" class="img-content"></div>
+                            </div>
+                        </div>
+                        <div id="slider-handle" class="slider-handle"></div>
+                        <div id="mag-main" class="magnifier"></div>
+                    </div>
+
+                    <div id="sbs-view">
+                        <div class="sbs-pane">
+                            <div id="sbs-left" class="sbs-img"></div>
+                            <div id="mag-sbs-left" class="magnifier"></div>
+                        </div>
+                        <div class="sbs-pane">
+                            <div id="sbs-right" class="sbs-img"></div>
+                            <div id="mag-sbs-right" class="magnifier"></div>
                         </div>
                     </div>
-
-                    <div id="slider-handle" class="slider-handle"></div>
-                    <div id="mag-main" class="magnifier"></div>
                 </div>
-
-                <div id="sbs-view">
-                    <div class="sbs-pane">
-                        <div id="sbs-left" class="sbs-img"></div>
-                        <div id="mag-sbs-left" class="magnifier"></div>
-                    </div>
-                    <div class="sbs-pane">
-                        <div id="sbs-right" class="sbs-img"></div>
-                        <div id="mag-sbs-right" class="magnifier"></div>
-                    </div>
+                <div class="status-bar">
+                    Scroll: Zoom | Drag: Move Image | Z: Magnifier | V: View | R: Reset
                 </div>
-            </div>
-
-            <div class="status-bar">
-                Scroll: Zoom | Drag: Move Image | Z: Magnifier | V: View | R: Reset
             </div>
         </main>
     </div>

@@ -1,4 +1,4 @@
-let currentViewData = { gameIdx: 0, sceneIdx: 0 };
+let currentViewData = { gameIdx: null, sceneIdx: null };
 let viewMode = 'slider'; 
 let isMagOn = false;
 
@@ -31,48 +31,92 @@ function init() {
 
     if (!shroud) return;
 
-    buildGameNav();
-    loadGame(0);
+    buildNavAndHome();
     setupEventListeners();
     refreshSlider();
     window.addEventListener('resize', refreshSlider);
+    goHome();
 }
-function buildGameNav() {
+
+function buildNavAndHome() {
     const nav = document.getElementById('game-nav');
-    if (!nav) return;
+    const homeGrid = document.getElementById('home-game-grid');
+    if (!nav || !homeGrid) return;
+
     nav.innerHTML = '';
-    CONFIG.games.forEach((game, idx) => {
-        const btn = document.createElement('button');
-        btn.innerText = game.name;
-        btn.id = `btn-game-${idx}`;
-        btn.onclick = () => loadGame(idx);
-        nav.appendChild(btn);
+    homeGrid.innerHTML = '';
+
+    CONFIG.games.forEach((game, gameIdx) => {
+
+        const card = document.createElement('div');
+        card.className = 'grid-card';
+        card.innerText = game.name;
+        card.onclick = () => loadGame(gameIdx);
+        homeGrid.appendChild(card);
+
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'game-group';
+
+        const gameBtn = document.createElement('button');
+        gameBtn.className = 'game-btn';
+        gameBtn.innerText = game.name;
+        gameBtn.id = `nav-game-${gameIdx}`;
+        gameBtn.onclick = () => loadGame(gameIdx);
+
+        const sceneList = document.createElement('div');
+        sceneList.className = 'scene-list';
+        sceneList.id = `scene-list-${gameIdx}`;
+
+        game.scenes.forEach((scene, sceneIdx) => {
+            const sceneBtn = document.createElement('button');
+            sceneBtn.className = 'scene-btn';
+            sceneBtn.innerText = scene.name;
+            sceneBtn.id = `btn-scene-${gameIdx}-${sceneIdx}`;
+            sceneBtn.onclick = (e) => {
+                e.stopPropagation(); 
+                loadScene(gameIdx, sceneIdx);
+            };
+            sceneList.appendChild(sceneBtn);
+        });
+
+        groupDiv.appendChild(gameBtn);
+        groupDiv.appendChild(sceneList);
+        nav.appendChild(groupDiv);
     });
+}
+
+function goHome() {
+    document.getElementById('home-view').style.display = 'flex';
+    document.getElementById('app-view').style.display = 'none';
+    currentViewData = { gameIdx: null, sceneIdx: null };
+
+    document.querySelectorAll('.scene-list').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
 }
 
 function loadGame(gameIdx) {
-    currentViewData.gameIdx = gameIdx;
-    const game = CONFIG.games[gameIdx];
+    document.getElementById('home-view').style.display = 'none';
+    document.getElementById('app-view').style.display = 'flex';
 
-    document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active'));
-    const activeBtn = document.getElementById(`btn-game-${gameIdx}`);
-    if (activeBtn) activeBtn.classList.add('active');
+    document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.scene-list').forEach(list => list.classList.remove('active'));
 
-    const sceneNav = document.getElementById('scene-nav');
-    sceneNav.innerHTML = '';
-    game.scenes.forEach((scene, idx) => {
-        const btn = document.createElement('button');
-        btn.innerText = scene.name;
-        btn.id = `btn-scene-${idx}`;
-        btn.onclick = () => loadScene(idx);
-        sceneNav.appendChild(btn);
-    });
-    loadScene(0);
+    document.getElementById(`nav-game-${gameIdx}`).classList.add('active');
+    document.getElementById(`scene-list-${gameIdx}`).classList.add('active');
+
+    loadScene(gameIdx, 0);
+
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('hidden')) {
+        toggleSidebar();
+    }
 }
 
-function loadScene(sceneIdx) {
+function loadScene(gameIdx, sceneIdx) {
+    currentViewData.gameIdx = gameIdx;
     currentViewData.sceneIdx = sceneIdx;
-    const game = CONFIG.games[currentViewData.gameIdx];
+    
+    const game = CONFIG.games[gameIdx];
     const scene = game.scenes[sceneIdx];
 
     const pathA = `img/${game.id}/${scene.folder}/${scene.labels[0]}.${game.ext}`;
@@ -83,15 +127,32 @@ function loadScene(sceneIdx) {
     elSbsLeft.style.backgroundImage = `url(${pathA})`;
     elSbsRight.style.backgroundImage = `url(${pathB})`;
 
-    labelL.innerText = scene.labels[0];
-    labelR.innerText = scene.labels[1];
+    const textA = (scene.displayLabels && scene.displayLabels[0]) ? scene.displayLabels[0] : scene.labels[0];
+    const textB = (scene.displayLabels && scene.displayLabels[1]) ? scene.displayLabels[1] : scene.labels[1];
 
-    document.querySelectorAll('#scene-nav button').forEach(b => b.classList.remove('active'));
-    const sceneBtn = document.getElementById(`btn-scene-${sceneIdx}`);
-    if (sceneBtn) sceneBtn.classList.add('active');
+    labelL.innerText = textA;
+    labelR.innerText = textB;
+
+    document.querySelectorAll('.scene-btn').forEach(b => b.classList.remove('active'));
+    const activeSceneBtn = document.getElementById(`btn-scene-${gameIdx}-${sceneIdx}`);
+    if (activeSceneBtn) activeSceneBtn.classList.add('active');
 
     resetZoomAndPan();
     setTimeout(refreshSlider, 50);
+}
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('hidden');
+    
+    const menuBtn = document.getElementById('menuBtn');
+    if (sidebar.classList.contains('hidden')) {
+        menuBtn.classList.add('active');
+    } else {
+        menuBtn.classList.remove('active');
+    }
+
+    setTimeout(refreshSlider, 310); 
 }
 
 function applyTransform() {
@@ -121,7 +182,7 @@ function refreshSlider() {
 }
 
 function handleMagnifierLogic(e) {
-    if (!isMagOn || action !== 'none') {
+    if (!isMagOn || action !== 'none' || currentViewData.gameIdx === null) {
         hideAllMags();
         return;
     }
