@@ -34,11 +34,6 @@ const CONFIG = {
                         { path: 'img/rcqfb/2/x16.png', label: 'x16 AF' },
                         { path: 'img/rcqfb/1/100.png', label: '100% (With MSAA)' },
                         { path: 'img/rcqfb/1/300.png', label: '300% (With MSAA)' },
-                    ]
-                },
-                {
-                    name: 'Scene 2',
-                    images: [
                         { path: 'img/rcqfb/3/100.png', label: '100% (No MSAA)' },
                         { path: 'img/rcqfb/3/300.png', label: '300% (No MSAA)' }
                     ]
