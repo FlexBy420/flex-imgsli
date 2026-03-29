@@ -47,7 +47,6 @@ function buildNavAndHome() {
     homeGrid.innerHTML = '';
 
     CONFIG.games.forEach((game, gameIdx) => {
-
         const card = document.createElement('div');
         card.className = 'grid-card';
         card.innerText = game.name;
@@ -90,6 +89,12 @@ function goHome() {
     document.getElementById('app-view').style.display = 'none';
     currentViewData = { gameIdx: null, sceneIdx: null };
 
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.add('hidden');
+
+    const menuBtn = document.getElementById('menuBtn');
+    if(menuBtn) menuBtn.classList.add('active');
+
     document.querySelectorAll('.scene-list').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
 }
@@ -107,9 +112,10 @@ function loadGame(gameIdx) {
     loadScene(gameIdx, 0);
 
     const sidebar = document.getElementById('sidebar');
-    if (sidebar.classList.contains('hidden')) {
-        toggleSidebar();
-    }
+    sidebar.classList.remove('hidden');
+
+    const menuBtn = document.getElementById('menuBtn');
+    if(menuBtn) menuBtn.classList.remove('active');
 }
 
 function loadScene(gameIdx, sceneIdx) {
