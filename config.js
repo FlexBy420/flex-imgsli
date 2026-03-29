@@ -36,6 +36,28 @@ const CONFIG = {
             ]
         },
         {
+            name: 'Uncharted 2: Among Thieves (RPCS3)',
+            scenes: [
+                {
+                    name: 'Urban Warfare',
+                    images: [
+                        { path: 'img/uc2/1/720_nomsaa.png', label: '720p (No MSAA)' },
+                        { path: 'img/uc2/1/1080_nomsaa.png', label: '1080p (No MSAA)' },
+                        { path: 'img/uc2/1/1440_nomsaa.png', label: '1440p (No MSAA)' },
+                        { path: 'img/uc2/1/2160_nomsaa.png', label: '2160p (No MSAA)' },
+                        { path: 'img/uc2/1/2880_nomsaa.png', label: '2880p (No MSAA)' },
+                        { path: 'img/uc2/1/3600_nomsaa.png', label: '3600p (No MSAA)' },
+                        { path: 'img/uc2/1/720_nomsaa_nodof.png', label: '720p (No MSAA & No DoF)' },
+                        { path: 'img/uc2/1/1080_nomsaa_nodof.png', label: '1080p (No MSAA & No DoF)' },
+                        { path: 'img/uc2/1/1440_nomsaa_nodof.png', label: '1440p (No MSAA & No DoF)' },
+                        { path: 'img/uc2/1/2160_nomsaa_nodof.png', label: '2160p (No MSAA & No DoF)' },
+                        { path: 'img/uc2/1/2880_nomsaa_nodof.png', label: '2880p (No MSAA & No DoF)' },
+                        { path: 'img/uc2/1/3600_nomsaa_nodof.png', label: '3600p (No MSAA & No DoF)' }
+                    ]
+                }
+            ]
+        },
+        {
             name: 'Ratchet & Clank Future: Quest for Booty (RPCS3)',
             scenes: [
                 {
