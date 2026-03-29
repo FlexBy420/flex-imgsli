@@ -49,7 +49,9 @@ function buildNavAndHome() {
     nav.innerHTML = '';
     homeGrid.innerHTML = '';
 
-    CONFIG.games.forEach((game, gameIdx) => {
+    const sortedGames = [...CONFIG.games].sort((a, b) => a.name.localeCompare(b.name));
+    sortedGames.forEach((game) => {
+        const gameIdx = CONFIG.games.indexOf(game);
         const card = document.createElement('div');
         card.className = 'grid-card';
         card.innerText = game.name;
