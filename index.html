@@ -18,15 +18,13 @@
     <div class="main-layout">
         <aside class="sidebar" id="sidebar">
             <h3>GALLERY</h3>
-            <div id="game-nav" class="vertical-nav">
-                </div>
+            <div id="game-nav" class="vertical-nav"></div>
         </aside>
         <main class="content">
             <div id="home-view" class="home-container">
                 <h1>Image Compare</h1>
                 <p>Select a game from the gallery to start comparing graphics.</p>
-                <div id="home-game-grid" class="game-grid">
-                    </div>
+                <div id="home-game-grid" class="game-grid"></div>
             </div>
             <div id="app-view" style="display: none; width: 100%; height: 100%; flex-direction: column; align-items: center;">
                 <div class="controls">
@@ -37,10 +35,19 @@
                     <button id="magBtn" onclick="toggleMagnifier()">Magnifier (Z)</button>
                     <button onclick="resetZoomAndPan()">Reset View (R)</button>
                 </div>
+                <div id="image-selectors" class="selectors-container" style="display: none;">
+                    <div class="selector-group">
+                        <label for="select-left" style="color: white;">LEFT:</label>
+                        <select id="select-left" onchange="changeImageSelection()"></select>
+                    </div>
+                    <div class="selector-group">
+                        <label for="select-right" style="color: var(--accent);">RIGHT:</label>
+                        <select id="select-right" onchange="changeImageSelection()"></select>
+                    </div>
+                </div>
                 <div id="viewer-shroud">
                     <div id="label-left" class="res-label res-left"></div>
                     <div id="label-right" class="res-label res-right"></div>
-
                     <div id="slider-view">
                         <div id="slider-base-viewport" class="pan-viewport">
                             <div id="img-base" class="img-content"></div>
@@ -53,7 +60,6 @@
                         <div id="slider-handle" class="slider-handle"></div>
                         <div id="mag-main" class="magnifier"></div>
                     </div>
-
                     <div id="sbs-view">
                         <div class="sbs-pane">
                             <div id="sbs-left" class="sbs-img"></div>

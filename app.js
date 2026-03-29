@@ -2,6 +2,9 @@ let currentViewData = { gameIdx: null, sceneIdx: null };
 let viewMode = 'slider'; 
 let isMagOn = false;
 
+let currentPathA = '';
+let currentPathB = '';
+
 let scale = 1;
 let translateX = 0;
 let translateY = 0;
@@ -87,6 +90,7 @@ function buildNavAndHome() {
 function goHome() {
     document.getElementById('home-view').style.display = 'flex';
     document.getElementById('app-view').style.display = 'none';
+    document.getElementById('image-selectors').style.display = 'none';
     currentViewData = { gameIdx: null, sceneIdx: null };
 
     const sidebar = document.getElementById('sidebar');
@@ -122,26 +126,60 @@ function loadScene(gameIdx, sceneIdx) {
     currentViewData.gameIdx = gameIdx;
     currentViewData.sceneIdx = sceneIdx;
     
-    const game = CONFIG.games[gameIdx];
-    const scene = game.scenes[sceneIdx];
-
-    const pathA = `img/${game.id}/${scene.folder}/${scene.labels[0]}.${game.ext}`;
-    const pathB = `img/${game.id}/${scene.folder}/${scene.labels[1]}.${game.ext}`;
-
-    elSliderBase.style.backgroundImage = `url(${pathB})`;
-    elSliderOverlay.style.backgroundImage = `url(${pathA})`;
-    elSbsLeft.style.backgroundImage = `url(${pathA})`;
-    elSbsRight.style.backgroundImage = `url(${pathB})`;
-
-    const textA = (scene.displayLabels && scene.displayLabels[0]) ? scene.displayLabels[0] : scene.labels[0];
-    const textB = (scene.displayLabels && scene.displayLabels[1]) ? scene.displayLabels[1] : scene.labels[1];
-
-    labelL.innerText = textA;
-    labelR.innerText = textB;
-
     document.querySelectorAll('.scene-btn').forEach(b => b.classList.remove('active'));
     const activeSceneBtn = document.getElementById(`btn-scene-${gameIdx}-${sceneIdx}`);
     if (activeSceneBtn) activeSceneBtn.classList.add('active');
+
+    const scene = CONFIG.games[gameIdx].scenes[sceneIdx];
+
+    const selLeft = document.getElementById('select-left');
+    const selRight = document.getElementById('select-right');
+    
+    selLeft.innerHTML = '';
+    selRight.innerHTML = '';
+
+    scene.images.forEach((imgObj, idx) => {
+        const optL = document.createElement('option');
+        optL.value = idx;
+        optL.innerText = imgObj.label;
+        selLeft.appendChild(optL);
+
+        const optR = document.createElement('option');
+        optR.value = idx;
+        optR.innerText = imgObj.label;
+        selRight.appendChild(optR);
+    });
+
+    selLeft.selectedIndex = 0;
+    selRight.selectedIndex = scene.images.length > 1 ? 1 : 0;
+
+    document.getElementById('image-selectors').style.display = 'flex';
+    changeImageSelection();
+}
+
+function changeImageSelection() {
+    const gameIdx = currentViewData.gameIdx;
+    const sceneIdx = currentViewData.sceneIdx;
+    if (gameIdx === null || sceneIdx === null) return;
+
+    const scene = CONFIG.games[gameIdx].scenes[sceneIdx];
+
+    const idxL = document.getElementById('select-left').value;
+    const idxR = document.getElementById('select-right').value;
+
+    const imgL = scene.images[idxL];
+    const imgR = scene.images[idxR];
+
+    currentPathA = imgL.path; // left
+    currentPathB = imgR.path; // right
+
+    elSliderBase.style.backgroundImage = `url(${currentPathB})`;
+    elSliderOverlay.style.backgroundImage = `url(${currentPathA})`;
+    elSbsLeft.style.backgroundImage = `url(${currentPathA})`;
+    elSbsRight.style.backgroundImage = `url(${currentPathB})`;
+
+    labelL.innerText = imgL.label;
+    labelR.innerText = imgR.label;
 
     resetZoomAndPan();
     setTimeout(refreshSlider, 50);
@@ -194,10 +232,6 @@ function handleMagnifierLogic(e) {
     }
 
     const rect = shroud.getBoundingClientRect();
-    const game = CONFIG.games[currentViewData.gameIdx];
-    const scene = game.scenes[currentViewData.sceneIdx];
-    const pathA = `img/${game.id}/${scene.folder}/${scene.labels[0]}.${game.ext}`;
-    const pathB = `img/${game.id}/${scene.folder}/${scene.labels[1]}.${game.ext}`;
 
     if (viewMode === 'slider') {
         const x = e.clientX - rect.left;
@@ -212,7 +246,7 @@ function handleMagnifierLogic(e) {
             const unscaledY = (y - translateY) / scale;
 
             const currentMousePercent = (x / rect.width) * 100;
-            const activeImg = (currentMousePercent < sliderPercent) ? pathA : pathB;
+            const activeImg = (currentMousePercent < sliderPercent) ? currentPathA : currentPathB;
 
             magMain.style.backgroundImage = `url(${activeImg})`;
             magMain.style.backgroundSize = `${rect.width * scale * 2}px ${rect.height * scale * 2}px`;
@@ -234,7 +268,7 @@ function handleMagnifierLogic(e) {
                 m.style.top = (y - 110) + "px";
                 const unscaledX = (x - translateX) / scale;
                 const unscaledY = (y - translateY) / scale;
-                const img = (i === 0) ? pathA : pathB;
+                const img = (i === 0) ? currentPathA : currentPathB;
                 m.style.backgroundImage = `url(${img})`;
                 m.style.backgroundSize = `${paneRect.width * scale * 2}px ${paneRect.height * scale * 2}px`;
                 m.style.backgroundPosition = `-${(unscaledX * scale * 2) - 110}px -${(unscaledY * scale * 2) - 110}px`;
