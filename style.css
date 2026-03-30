@@ -53,39 +53,47 @@ html, body {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .sidebar.hidden {
-    min-width: 0;
-    width: 0;
-    padding: 20px 0;
-    border-right-color: transparent;
-    opacity: 0;
+    min-width: 0; width: 0; padding: 20px 0; border-right-color: transparent; opacity: 0;
 }
 .sidebar h3 { font-size: 12px; text-transform: uppercase; color: #666; letter-spacing: 2px; margin-bottom: 5px; white-space: nowrap;}
 .vertical-nav { display: flex; flex-direction: column; gap: 4px; }
-
 .game-group { margin-bottom: 10px; }
-.game-btn { width: 100%; text-align: left; padding: 10px; background: #222; border: 1px solid #333; }
+.game-btn { width: 100%; text-align: left; padding: 10px; background: #222; border: 1px solid #333; color: white; cursor: pointer; }
 .game-btn:hover { background: #333; }
 .scene-list { display: none; flex-direction: column; gap: 2px; margin-top: 4px; margin-left: 10px; border-left: 2px solid #333; padding-left: 8px;}
 .scene-list.active { display: flex; }
-.scene-btn { width: 100%; text-align: left; padding: 8px; background: transparent; border: none; border-radius: 4px; color: #aaa; font-size: 12px; font-weight: normal; }
+.scene-btn { width: 100%; text-align: left; padding: 8px; background: transparent; border: none; border-radius: 4px; color: #aaa; font-size: 12px; cursor: pointer; }
 .scene-btn:hover { background: #2a2a2a; color: white; }
 .scene-btn.active { background: #2a2a2a; color: var(--accent); font-weight: bold; border-left: 2px solid var(--accent); border-radius: 0 4px 4px 0;}
-
 .home-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; }
 .home-container h1 { font-size: 3rem; margin-bottom: 10px; color: white; text-shadow: 0 0 20px rgba(0, 123, 255, 0.5); }
 .home-container p { color: #888; margin-bottom: 40px; font-size: 1.1rem; }
 .game-grid { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; max-width: 800px; }
 .grid-card { background: #151515; border: 1px solid #333; padding: 20px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: bold; }
 .grid-card:hover { transform: translateY(-5px); background: #222; border-color: var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-
 .content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; overflow: hidden; }
 .controls { margin-bottom: 12px; display: flex; gap: 10px; align-items: center; }
 .separator { width: 1px; height: 24px; background: #444; margin: 0 5px; }
-
 button { padding: 8px 16px; cursor: pointer; background: #252525; color: white; border: 1px solid #444; border-radius: 4px; transition: 0.2s; font-weight: bold; font-size: 13px; }
 button:hover { background: #333; border-color: #666; }
 button.active { background: var(--accent); border-color: white; }
 button.on { background: #28a745; border-color: #afffa0; }
+
+.selectors-container {
+    display: none;
+    gap: 30px;
+    margin-bottom: 12px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    z-index: 10;
+}
+.selector-group { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: bold; letter-spacing: 1px;}
+.selector-group select { 
+    padding: 6px 12px; background: #222; color: white; border: 1px solid #444; 
+    border-radius: 4px; font-weight: bold; font-size: 13px; cursor: pointer; outline: none; transition: 0.2s;
+}
+.selector-group select:hover { border-color: var(--accent); }
 
 #viewer-shroud {
     position: relative; max-height: calc(100vh - var(--ui-space)); width: 100%;
@@ -93,10 +101,48 @@ button.on { background: #28a745; border-color: #afffa0; }
     background: #000; border: 1px solid #444; overflow: hidden; box-shadow: 0 10px 50px rgba(0,0,0,0.8);
 }
 
-.res-label { position: absolute; top: 15px; z-index: 10; background: rgba(0,0,0,0.7); padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 800; pointer-events: none; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; }
+#viewer-shroud:fullscreen {
+    width: 100vw; height: 100vh; max-width: none; max-height: none; border: none;
+}
+
+#viewer-shroud:fullscreen .selectors-container {
+    display: flex !important;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 10px 25px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: auto;
+    margin-bottom: 0;
+    opacity: 0.2;
+    transition: opacity 0.3s;
+}
+#viewer-shroud:fullscreen .selectors-container:hover { opacity: 1; }
+
+.res-label { 
+    position: absolute; bottom: 15px; top: auto !important; z-index: 10; 
+    background: rgba(0,0,0,0.7); padding: 4px 12px; border-radius: 4px; 
+    font-size: 11px; font-weight: 800; pointer-events: none; 
+    border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase;
+    display: none !important;
+    align-items: center;
+}
+#viewer-shroud:fullscreen .res-label { display: flex !important; align-items: center; }
 .res-left { left: 15px; color: #fff; }
 .res-right { right: 15px; color: var(--accent); }
 
+.plat-tag, .feature-tag {
+    display: inline-block; padding: 2px 6px; border-radius: 4px; margin-left: 8px;
+    font-size: 10px; vertical-align: middle; letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5); white-space: nowrap;
+}
+.plat-tag { background: #444; color: #fff; border: 1px solid #666; }
+.plat-tag.right { background: #0056b3; border-color: var(--accent); }
+.feature-tag { background: #2a2a2a; color: #ccc; border: 1px solid #444; font-weight: normal; }
 #slider-view { position: relative; width: 100%; height: 100%; }
 .pan-viewport { position: absolute; width: 100%; height: 100%; overflow: hidden; }
 .img-content { width: 100%; height: 100%; background-size: contain; background-repeat: no-repeat; background-position: center; transform-origin: 0 0; transition: background-image 0.2s ease-in-out; }
@@ -111,13 +157,45 @@ button.on { background: #28a745; border-color: #afffa0; }
 .creator-tag { position: fixed; bottom: 15px; right: 15px; font-size: 11px; color: #555; background: rgba(0, 0, 0, 0.7); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); letter-spacing: 1px; text-transform: uppercase; z-index: 100; font-weight: bold; backdrop-filter: blur(4px); }
 .creator-tag a { color: var(--accent); text-decoration: none; transition: 0.3s; }
 .creator-tag a:hover { color: white; text-shadow: 0 0 8px var(--accent); }
-.selectors-container {
-    display: flex; gap: 30px; margin-bottom: 12px; align-items: center; justify-content: center; width: 100%;
+#app-view:fullscreen {
+    background: var(--bg);
+    display: flex !important;
+    justify-content: center;
 }
-.selector-group { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: bold; letter-spacing: 1px;}
-.selector-group select { 
-    padding: 6px 12px; background: #222; color: white; border: 1px solid #444; 
-    border-radius: 4px; font-weight: bold; font-size: 13px; cursor: pointer; outline: none; transition: 0.2s;
+
+#app-view:fullscreen .controls,
+#app-view:fullscreen .status-bar {
+    display: none !important;
 }
-.selector-group select:hover { border-color: var(--accent); }
-.selector-group select:focus { border-color: var(--accent); background: #2a2a2a; }
+
+#app-view:fullscreen #viewer-shroud {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    border: none;
+}
+
+#app-view:fullscreen .selectors-container {
+    display: flex !important;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 10px 25px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: auto;
+    margin-bottom: 0;
+    opacity: 0.2;
+    transition: opacity 0.3s;
+    z-index: 1000;
+}
+
+#app-view:fullscreen .selectors-container:hover {
+    opacity: 1;
+}
+
+#app-view:fullscreen .res-label { display: flex !important; }

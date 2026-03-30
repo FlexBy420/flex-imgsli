@@ -36,9 +36,18 @@ function init() {
 
     buildNavAndHome();
     setupEventListeners();
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('g') && params.has('s')) {
+        const g = parseInt(params.get('g'));
+        const s = parseInt(params.get('s'));
+        loadGame(g, s); 
+    } else {
+        goHome();
+    }
+
     refreshSlider();
     window.addEventListener('resize', refreshSlider);
-    goHome();
 }
 
 function buildNavAndHome() {
@@ -97,15 +106,16 @@ function goHome() {
 
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.add('hidden');
-
     const menuBtn = document.getElementById('menuBtn');
     if(menuBtn) menuBtn.classList.add('active');
 
     document.querySelectorAll('.scene-list').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
+
+    window.history.replaceState({}, '', window.location.pathname);
 }
 
-function loadGame(gameIdx) {
+function loadGame(gameIdx, targetSceneIdx = 0) {
     document.getElementById('home-view').style.display = 'none';
     document.getElementById('app-view').style.display = 'flex';
 
@@ -115,11 +125,10 @@ function loadGame(gameIdx) {
     document.getElementById(`nav-game-${gameIdx}`).classList.add('active');
     document.getElementById(`scene-list-${gameIdx}`).classList.add('active');
 
-    loadScene(gameIdx, 0);
+    loadScene(gameIdx, targetSceneIdx);
 
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.remove('hidden');
-
     const menuBtn = document.getElementById('menuBtn');
     if(menuBtn) menuBtn.classList.remove('active');
 }
@@ -133,7 +142,6 @@ function loadScene(gameIdx, sceneIdx) {
     if (activeSceneBtn) activeSceneBtn.classList.add('active');
 
     const scene = CONFIG.games[gameIdx].scenes[sceneIdx];
-
     const selLeft = document.getElementById('select-left');
     const selRight = document.getElementById('select-right');
     
@@ -141,21 +149,39 @@ function loadScene(gameIdx, sceneIdx) {
     selRight.innerHTML = '';
 
     scene.images.forEach((imgObj, idx) => {
+        const game = CONFIG.games[gameIdx];
+        const plat = imgObj.platform || game.platform || 'N/A';
+
+        let dropdownText = `[${plat}] ${imgObj.label}`;
+        if (imgObj.tags && imgObj.tags.length > 0) {
+            dropdownText += ` (${imgObj.tags.join(', ')})`;
+        }
+
         const optL = document.createElement('option');
         optL.value = idx;
-        optL.innerText = imgObj.label;
+        optL.innerText = dropdownText;
         selLeft.appendChild(optL);
 
         const optR = document.createElement('option');
         optR.value = idx;
-        optR.innerText = imgObj.label;
+        optR.innerText = dropdownText;
         selRight.appendChild(optR);
     });
 
-    selLeft.selectedIndex = 0;
-    selRight.selectedIndex = scene.images.length > 1 ? 1 : 0;
+    const params = new URLSearchParams(window.location.search);
+    let startL = 0;
+    let startR = scene.images.length > 1 ? 1 : 0;
+    
+    if (params.get('g') == gameIdx && params.get('s') == sceneIdx) {
+        if (params.has('l')) startL = parseInt(params.get('l'));
+        if (params.has('r')) startR = parseInt(params.get('r'));
+    }
+
+    selLeft.selectedIndex = startL;
+    selRight.selectedIndex = startR;
 
     document.getElementById('image-selectors').style.display = 'flex';
+    resetZoomAndPan();
     changeImageSelection();
 }
 
@@ -164,7 +190,8 @@ function changeImageSelection() {
     const sceneIdx = currentViewData.sceneIdx;
     if (gameIdx === null || sceneIdx === null) return;
 
-    const scene = CONFIG.games[gameIdx].scenes[sceneIdx];
+    const game = CONFIG.games[gameIdx];
+    const scene = game.scenes[sceneIdx];
 
     const idxL = document.getElementById('select-left').value;
     const idxR = document.getElementById('select-right').value;
@@ -180,10 +207,27 @@ function changeImageSelection() {
     elSbsLeft.style.backgroundImage = `url(${currentPathA})`;
     elSbsRight.style.backgroundImage = `url(${currentPathB})`;
 
-    labelL.innerText = imgL.label;
-    labelR.innerText = imgR.label;
+    const buildTags = (img, isRightSide) => {
+        let html = '';
+        const plat = img.platform || game.platform || '';
+        if (plat) html += `<span class="plat-tag ${isRightSide ? 'right' : ''}">${plat}</span>`;
+        if (img.tags && img.tags.length > 0) {
+            img.tags.forEach(tag => { html += `<span class="feature-tag">${tag}</span>`; });
+        }
+        return html;
+    };
 
-    resetZoomAndPan();
+    labelL.innerHTML = `<span>${imgL.label}</span>` + buildTags(imgL, false);
+    labelR.innerHTML = `<span>${imgR.label}</span>` + buildTags(imgR, true);
+
+    const newUrl = new URL(window.location);
+    newUrl.searchParams.set('g', gameIdx);
+    newUrl.searchParams.set('s', sceneIdx);
+    newUrl.searchParams.set('l', idxL);
+    newUrl.searchParams.set('r', idxR);
+    window.history.replaceState({}, '', newUrl);
+
+    applyTransform();
     setTimeout(refreshSlider, 50);
 }
 
@@ -346,6 +390,7 @@ function setupEventListeners() {
         if (key === 'z') toggleMagnifier();
         if (key === 'v') toggleViewMode();
         if (key === 'r') resetZoomAndPan();
+        if (key === 'f') toggleFullscreen();
     });
 }
 
@@ -366,6 +411,34 @@ function toggleMagnifier() {
 
 function hideAllMags() {
     [magMain, magL, magR].forEach(m => { if(m) m.style.display = 'none'; });
+}
+
+function copyShareLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        const btn = document.getElementById('copyLinkBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✅ Copied!';
+        btn.style.backgroundColor = '#28a745';
+        btn.style.borderColor = '#28a745';
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.backgroundColor = '';
+            btn.style.borderColor = '';
+        }, 2000);
+    });
+}
+
+function toggleFullscreen() {
+    const elem = document.getElementById('app-view');
+
+    if (!document.fullscreenElement) {
+        elem.requestFullscreen().catch(err => {
+            alert(`Error: ${err.message}`);
+        });
+    } else {
+        document.exitFullscreen();
+    }
 }
 
 window.onload = init;
