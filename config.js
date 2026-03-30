@@ -87,8 +87,8 @@ const CONFIG = {
                         { path: 'img/ut3/2/400.png', label: '2880p', platform: 'RPCS3' },
                         { path: 'img/ut3/2/400_16xAF.png', label: '2880p', tags: ['x16 AF'], platform: 'RPCS3' }
                     ]
-                },
-{
+				},
+				{
                     name: 'Suspense',
                     images: [
                         { path: 'img/ut3/3/100.png', label: '720p', tags: ['x16 AF'], platform: 'RPCS3' },
