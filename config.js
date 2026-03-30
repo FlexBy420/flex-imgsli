@@ -64,7 +64,7 @@ const CONFIG = {
                     name: 'Deimos',
                     images: [
                         { path: 'img/ut3/1/100.png', label: '720p', tags: ['x16 AF'], platform: 'RPCS3' },
-                        { path: 'img/ut3/1/200.png', label: '1400p', tags: ['x16 AF'], platform: 'RPCS3' },
+                        { path: 'img/ut3/1/200.png', label: '1440p', tags: ['x16 AF'], platform: 'RPCS3' },
                         { path: 'img/ut3/1/300.png', label: '2160p', tags: ['x16 AF'], platform: 'RPCS3' },
                         { path: 'img/ut3/1/400.png', label: '2880p', tags: ['x16 AF'], platform: 'RPCS3' },
                         { path: 'img/ut3/1/500.png', label: '3600p', tags: ['x16 AF'], platform: 'RPCS3' },
