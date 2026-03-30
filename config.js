@@ -70,6 +70,35 @@ const CONFIG = {
                         { path: 'img/ut3/1/500.png', label: '3600p', tags: ['x16 AF'], platform: 'RPCS3' },
                         { path: 'img/ut3/1/600.png', label: '4320p', tags: ['x16 AF'], platform: 'RPCS3' }
                     ]
+				},
+				{
+                    name: 'Torlan',
+                    images: [
+                        { path: 'img/ut3/2/100.png', label: '720p', platform: 'RPCS3' },
+                        { path: 'img/ut3/2/100_FSR0to1440p.png', label: '720p to 1440p', tags: ['FSR 0%'], platform: 'RPCS3' },
+                        { path: 'img/ut3/2/100_FSR50to1440p.png', label: '720p to 1440p', tags: ['FSR 50%'], platform: 'RPCS3' },
+                        { path: 'img/ut3/2/100_FSR100to1440p.png', label: '720p to 1440p', tags: ['FSR 100%'], platform: 'RPCS3' },
+                        { path: 'img/ut3/2/100_16xAF.png', label: '720p', tags: ['x16 AF'], platform: 'RPCS3' },
+                        { path: 'img/ut3/2/100_16xAF_FSR0to1440p.png', label: '720p to 1440p', tags: ['FSR 0%', 'x16 AF'], platform: 'RPCS3' },
+                        { path: 'img/ut3/2/100_16xAF_FSR50to1440p.png', label: '720p to 1440p', tags: ['FSR 50%', 'x16 AF'], platform: 'RPCS3' },
+                        { path: 'img/ut3/2/100_16xAF_FSR100to1440p.png', label: '720p to 1440p', tags: ['FSR 100%', 'x16 AF'], platform: 'RPCS3' },
+                        { path: 'img/ut3/2/200.png', label: '1440p', platform: 'RPCS3' },
+                        { path: 'img/ut3/2/200_16xAF.png', label: '1440p', tags: ['x16 AF'], platform: 'RPCS3' },
+                        { path: 'img/ut3/2/400.png', label: '2880p', platform: 'RPCS3' },
+                        { path: 'img/ut3/2/400_16xAF.png', label: '2880p', tags: ['x16 AF'], platform: 'RPCS3' }
+                    ]
+                },
+{
+                    name: 'Suspense',
+                    images: [
+                        { path: 'img/ut3/3/100.png', label: '720p', tags: ['x16 AF'], platform: 'RPCS3' },
+                        { path: 'img/ut3/3/100_FSR50to1440p.png', label: '720p to 1440p', tags: ['FSR 50%', 'x16AF'], platform: 'RPCS3' },
+                        { path: 'img/ut3/3/100_FSR100to1440p.png', label: '720p to 1440p', tags: ['FSR 100%', 'x16AF'], platform: 'RPCS3' },
+                        { path: 'img/ut3/3/150.png', label: '1080p', tags: ['x16 AF'], platform: 'RPCS3' },
+                        { path: 'img/ut3/3/200.png', label: '1440p', tags: ['x16 AF'], platform: 'RPCS3' },
+                        { path: 'img/ut3/3/300.png', label: '2160p', tags: ['x16 AF'], platform: 'RPCS3' },
+                        { path: 'img/ut3/3/600.png', label: '4320p', tags: ['x16 AF'], platform: 'RPCS3' },
+                    ]
                 }
             ]
         },
