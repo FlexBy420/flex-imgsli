@@ -128,6 +128,22 @@ const CONFIG = {
                     ]
                 }
             ]
+        },
+        {
+            name: 'Midnight Club: Los Angeles (RPCS3)',
+            scenes: [
+                {
+                    name: 'Scene 1',
+                    images: [
+                        { path: 'img/mcla/1/100.png', label: '100% (No MSAA & AF x16)' },
+                        { path: 'img/mcla/1/200.png', label: '200% (No MSAA & AF x16)' },
+                        { path: 'img/mcla/1/300.png', label: '300% (No MSAA & AF x16)' },
+                        { path: 'img/mcla/1/400.png', label: '400% (No MSAA & AF x16)' },
+                        { path: 'img/mcla/1/500.png', label: '500% (No MSAA & AF x16)' },
+                        { path: 'img/mcla/1/600.png', label: '600% (No MSAA & AF x16)' }
+                    ]
+                }
+            ]
         }
     ]
 };
