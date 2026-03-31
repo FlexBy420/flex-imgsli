@@ -206,6 +206,22 @@ const CONFIG = {
                     ]
                 }
             ]
+        },
+        {
+            name: 'Batman: Arkham Origins Blackgate',
+            scenes: [
+                {
+                    name: 'Scene 1',
+                    images: [
+                        { path: 'img/bmbg/1/100.png', label: '1280x720', tags: ['AF x16'], platform: 'RPCS3' },
+                        { path: 'img/bmbg/1/200.png', label: '2560x1440', tags: ['AF x16'], platform: 'RPCS3' },
+                        { path: 'img/bmbg/1/300.png', label: '3840x2160', tags: ['AF x16'], platform: 'RPCS3' },
+                        { path: 'img/bmbg/1/400.png', label: '5120x2880', tags: ['AF x16'], platform: 'RPCS3' },
+                        { path: 'img/bmbg/1/500.png', label: '6400x3600', tags: ['AF x16'], platform: 'RPCS3' },
+                        { path: 'img/bmbg/1/600.png', label: '7680x4320', tags: ['AF x16'], platform: 'RPCS3' }
+                    ]
+                }
+            ]
         }
     ]
 };
