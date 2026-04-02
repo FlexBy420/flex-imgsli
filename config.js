@@ -7,6 +7,7 @@ const CONFIG = {
                     name: 'Scene 1',
                     images: [
                         { path: 'img/acm/1/720.png', label: '1280x720', platform: 'RPCS3' },
+                        { path: 'img/acm/1/ps3_720.png', label: '1280x720', platform: 'PS3' },
                         { path: 'img/acm/1/2160.png', label: '3840x2160', platform: 'RPCS3' }
                     ]
                 }
