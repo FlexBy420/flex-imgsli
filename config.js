@@ -223,6 +223,24 @@ const CONFIG = {
                     ]
                 }
             ]
+        },
+        {
+            name: 'Counter Strike: Global Offensive',
+            scenes: [
+                {
+                    name: 'Weapons Course',
+                    images: [
+                        { path: 'img/csgo/1/ps3_100.png', label: '1280x720', platform: 'PS3' },
+                        { path: 'img/csgo/1/100.png', label: '1280x720', platform: 'RPCS3' },
+                        { path: 'img/csgo/1/150.png', label: '1920x1080', platform: 'RPCS3' },
+                        { path: 'img/csgo/1/200.png', label: '2560x1440', platform: 'RPCS3' },
+                        { path: 'img/csgo/1/300.png', label: '3840x2160', platform: 'RPCS3' },
+                        { path: 'img/csgo/1/400.png', label: '5120x2880', platform: 'RPCS3' },
+                        { path: 'img/csgo/1/500.png', label: '6400x3600', platform: 'RPCS3' },
+                        { path: 'img/csgo/1/600.png', label: '7680x4320', platform: 'RPCS3' }
+                    ]
+                }
+            ]
         }
     ]
 };
