@@ -148,7 +148,10 @@ const CONFIG = {
                     path: 'img/rctod/1/',
                     images: [
                         img('100.png', '960x704', 'RPCS3', ['No MSAA']),
-                        img('300.png', '2880x2112', 'RPCS3', ['No MSAA'])
+                        img('300.png', '2880x2112', 'RPCS3', ['No MSAA']),
+                        img('400.png', '3840x2816', 'RPCS3', ['No MSAA', 'x16 AF']),
+                        img('500.png', '4800x3520', 'RPCS3', ['No MSAA', 'x16 AF']),
+                        img('600.png', '5760x4224', 'RPCS3', ['No MSAA', 'x16 AF']),
                     ]
                 }
             ]
