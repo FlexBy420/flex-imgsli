@@ -9,7 +9,7 @@ const CONFIG = {
     games: [
         {
             name: 'Aliens: Colonial Marines',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/BLES01455_00_8DBBDDAEB2EE8029281B07C2AD1EDFA7DBD33419/ICON0.PNG',
+            icon: 'img/acm/ICON0.png',
             scenes: [
                 {
                     name: 'Scene 1',
@@ -24,7 +24,7 @@ const CONFIG = {
         },
         {
             name: 'Uncharted: Drake\'s Fortune',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/BCES00065_00_E3C2B9C750732074D83311E3428CAF6E0D60301D/ICON0.PNG',
+            icon: 'img/uc1/ICON0.png',
             scenes: [
                 {
                     name: 'The Search for El Dorado',
@@ -50,7 +50,7 @@ const CONFIG = {
         },
         {
             name: 'Uncharted 2: Among Thieves',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/BCAS20097_00_3BAF9FC65DE4AE89B70D15792EF9FF6ACC5E57AB/ICON0.PNG',
+            icon: 'img/uc2/ICON0.png',
             scenes: [
                 {
                     name: 'Urban Warfare',
@@ -74,7 +74,7 @@ const CONFIG = {
         },
         {
             name: 'Unreal Tournament 3',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/BLES00200_00_34AA15F14621F78ADA1A82BAB3B7A07BB7EE5CD1/ICON0.PNG',
+            icon: 'img/ut3/ICON0.png',
             scenes: [
                 {
                     name: 'Deimos',
@@ -123,7 +123,7 @@ const CONFIG = {
         },
         {
             name: 'Ratchet & Clank Future: Quest for Booty',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/BCAS20052_00_12CED172C87A5FAB9195626133237D117EEE917F/ICON0.PNG',
+            icon: 'img/rcqfb/ICON0.png',
             scenes: [
                 {
                     name: 'Scene 1',
@@ -141,7 +141,7 @@ const CONFIG = {
         },
         {
             name: 'Ratchet and Clank Future: Tools of Destruction Demo',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/NPHA20002_00_A2DE45B1A3871FC40AABE556212A741694364EBF/ICON0.PNG',
+            icon: 'img/rctod/ICON0.png',
             scenes: [
                 {
                     name: 'Scene 1',
@@ -158,7 +158,7 @@ const CONFIG = {
         },
         {
             name: 'No More Heroes: Heroes\' Paradise',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/BLES01101_00_05904D3896D4A2FE8E4379A4CA69641643F5214F/ICON0.PNG',
+            icon: 'img/nmhhp/ICON0.png',
             scenes: [
                 {
                     name: 'Scene 1',
@@ -172,7 +172,7 @@ const CONFIG = {
         },
         {
             name: 'Dark Souls 2',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/NPEB01853_00_334259944606A16C90B23C571298CB4749D89264/ICON0.PNG',
+            icon: 'img/ds2/ICON0.png',
             scenes: [
                 {
                     name: 'Scene 1',
@@ -189,7 +189,7 @@ const CONFIG = {
         },
         {
             name: 'Skate 3',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/BLJM60296_00_6F68335C4A1804BCA102EC5A4BE981254A3AC469/ICON0.PNG',
+            icon: 'img/sk3/ICON0.png',
             scenes: [
                 {
                     name: 'Scene 1',
@@ -207,7 +207,7 @@ const CONFIG = {
         },
         {
             name: 'Midnight Club: Los Angeles',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/NPEB00546_00_9FBD73315AF312E7552F83FE7A4DF8399E66797B/ICON0.PNG',
+            icon: 'img/mcla/ICON0.png',
             scenes: [
                 {
                     name: 'Scene 1',
@@ -225,7 +225,7 @@ const CONFIG = {
         },
         {
             name: 'Call Of Duty 4: Modern Warfare',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/BLUS30072_00_B74C6909177E14376E88A4D11CD43B804EDCECEE/ICON0.PNG',
+            icon: 'img/cod4/ICON0.png',
             scenes: [
                 {
                     name: 'Safehouse',
@@ -244,7 +244,7 @@ const CONFIG = {
         },
         {
             name: 'Batman: Arkham Origins Blackgate',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/NPEB01968_00_B1C4DDA95EC63641AE8FAD35D1E28B44D03AF693/ICON0.PNG',
+            icon: 'img/bmbg/ICON0.png',
             scenes: [
                 {
                     name: 'Scene 1',
@@ -262,7 +262,7 @@ const CONFIG = {
         },
         {
             name: 'Counter Strike: Global Offensive',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/NPUB30589_00_9C60F5BC8A0265A9A1A36E902F4A6B0D19E8524D/ICON0.PNG',
+            icon: 'img/csgo/ICON0.png',
             scenes: [
                 {
                     name: 'Weapons Course',
@@ -282,7 +282,7 @@ const CONFIG = {
         },
         {
             name: 'Battlefield: Bad Company',
-            icon: 'https://tmdb.np.dl.playstation.net/tmdb/BLES00259_00_D621F7CF8D748D82AF61AF7C7847156A859E5C27/ICON0.PNG',
+            icon: 'img/bfbc/ICON0.png',
             scenes: [
                 {
                     name: 'Scene 1',
