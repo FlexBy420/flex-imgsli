@@ -75,6 +75,8 @@ function buildNavAndHome() {
             const img = document.createElement('img');
             img.src = game.icon;
             img.className = 'game-icon';
+            img.loading = 'lazy';
+            img.alt = `${game.name} icon`;
             card.appendChild(img);
         } else {
             const placeholder = document.createElement('div');
