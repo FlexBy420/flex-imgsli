@@ -1,3 +1,4 @@
+/* global CONFIG */
 let currentViewData = { gameIdx: null, sceneIdx: null };
 let viewMode = 'slider'; 
 let isMagOn = false;
@@ -48,6 +49,11 @@ function init() {
 
     refreshSlider();
     window.addEventListener('resize', refreshSlider);
+    const menuBtn = document.getElementById('menuBtn');
+    if (menuBtn) menuBtn.addEventListener('click', toggleSidebar);
+
+    const copyBtn = document.getElementById('copyLinkBtn');
+    if (copyBtn) copyBtn.addEventListener('click', copyShareLink);
 }
 
 function buildNavAndHome() {

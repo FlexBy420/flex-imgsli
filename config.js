@@ -4,7 +4,7 @@ const img = (fileName, label, platform = 'RPCS3', tags = []) => ({
     platform, 
     tags 
 });
-
+// eslint-disable-next-line no-unused-vars
 const CONFIG = {
     games: [
         {
