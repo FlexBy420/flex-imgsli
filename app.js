@@ -63,8 +63,25 @@ function buildNavAndHome() {
         const gameIdx = CONFIG.games.indexOf(game);
         const card = document.createElement('div');
         card.className = 'grid-card';
-        card.innerText = game.name;
         card.onclick = () => loadGame(gameIdx);
+
+        if (game.icon) {
+            const img = document.createElement('img');
+            img.src = game.icon;
+            img.className = 'game-icon';
+            card.appendChild(img);
+        } else {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'game-icon-placeholder';
+            placeholder.innerText = '🎮';
+            card.appendChild(placeholder);
+        }
+
+        const title = document.createElement('span');
+        title.className = 'game-title';
+        title.innerText = game.name;
+        card.appendChild(title);
+
         homeGrid.appendChild(card);
 
         const groupDiv = document.createElement('div');
@@ -105,9 +122,9 @@ function goHome() {
     currentViewData = { gameIdx: null, sceneIdx: null };
 
     const sidebar = document.getElementById('sidebar');
-    sidebar.classList.add('hidden');
+    sidebar.classList.remove('visible');
     const menuBtn = document.getElementById('menuBtn');
-    if(menuBtn) menuBtn.classList.add('active');
+    if(menuBtn) menuBtn.classList.remove('active');
 
     document.querySelectorAll('.scene-list').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('active'));
@@ -128,9 +145,7 @@ function loadGame(gameIdx, targetSceneIdx = 0) {
     loadScene(gameIdx, targetSceneIdx);
 
     const sidebar = document.getElementById('sidebar');
-    sidebar.classList.remove('hidden');
-    const menuBtn = document.getElementById('menuBtn');
-    if(menuBtn) menuBtn.classList.remove('active');
+    sidebar.classList.add('visible');
 }
 
 function loadScene(gameIdx, sceneIdx) {
@@ -199,20 +214,20 @@ function changeImageSelection() {
     const imgL = scene.images[idxL];
     const imgR = scene.images[idxR];
 
-    currentPathA = imgL.path; // left
-    currentPathB = imgR.path; // right
+    currentPathA = scene.path + imgL.fileName; // left
+    currentPathB = scene.path + imgR.fileName; // right
 
     elSliderBase.style.backgroundImage = `url(${currentPathB})`;
     elSliderOverlay.style.backgroundImage = `url(${currentPathA})`;
     elSbsLeft.style.backgroundImage = `url(${currentPathA})`;
     elSbsRight.style.backgroundImage = `url(${currentPathB})`;
 
-    const buildTags = (img, isRightSide) => {
+    const buildTags = (imgObj, isRightSide) => {
         let html = '';
-        const plat = img.platform || game.platform || '';
+        const plat = imgObj.platform || game.platform || '';
         if (plat) html += `<span class="plat-tag ${isRightSide ? 'right' : ''}">${plat}</span>`;
-        if (img.tags && img.tags.length > 0) {
-            img.tags.forEach(tag => { html += `<span class="feature-tag">${tag}</span>`; });
+        if (imgObj.tags && imgObj.tags.length > 0) {
+            imgObj.tags.forEach(tag => { html += `<span class="feature-tag">${tag}</span>`; });
         }
         return html;
     };
@@ -233,14 +248,10 @@ function changeImageSelection() {
 
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('hidden');
+    sidebar.classList.toggle('visible');
     
     const menuBtn = document.getElementById('menuBtn');
-    if (sidebar.classList.contains('hidden')) {
-        menuBtn.classList.add('active');
-    } else {
-        menuBtn.classList.remove('active');
-    }
+    menuBtn.classList.toggle('active', !sidebar.classList.contains('visible'));
 
     setTimeout(refreshSlider, 310); 
 }
