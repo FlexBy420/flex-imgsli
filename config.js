@@ -277,6 +277,24 @@ const CONFIG = {
                     ]
                 }
             ]
+        },
+        {
+            name: 'Battlefield: Bad Company',
+            icon: 'https://tmdb.np.dl.playstation.net/tmdb/BLES00259_00_D621F7CF8D748D82AF61AF7C7847156A859E5C27/ICON0.PNG',
+            scenes: [
+                {
+                    name: 'Scene 1',
+                    path: 'img/bfbc/1/',
+                    images: [
+                        img('100.png', '1280x720'),
+                        img('200.png', '2560x1440'),
+                        img('300.png', '3840x2160'),
+                        img('100_nograin.png', '1280x720', 'RPCS3', ['No Film Grain']),
+                        img('200_nograin.png', '2560x1440', 'RPCS3', ['No Film Grain']),
+                        img('300_nograin.png', '3840x2160', 'RPCS3', ['No Film Grain'])
+                    ]
+                }
+            ]
         }
     ]
 };
