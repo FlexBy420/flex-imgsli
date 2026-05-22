@@ -297,6 +297,27 @@ const CONFIG = {
                     ]
                 }
             ]
+        },
+{
+            name: 'Metal Gear Solid 4: Guns of Patriots Demo',
+            icon: 'img/mgs4/demo/ICON0.PNG',
+            scenes: [
+                {
+                    name: 'Scene 1',
+                    path: 'img/mgs4/demo/1/',
+                    images: [
+                        img('100.png', '1024x768', 'RPCS3', ['With MSAA']),
+                        img('200.png', '2048x1536', 'RPCS3', ['With MSAA']),
+                        img('300.png', '3072x2304', 'RPCS3', ['With MSAA']),
+                        img('400.png', '4096x3072', 'RPCS3', ['With MSAA']),
+                        img('100_noaa.png', '1024x768', 'RPCS3', ['No MSAA', 'AF x16']),
+                        img('200_noaa.png', '2048x1536', 'RPCS3', ['No MSAA', 'AF x16']),
+                        img('300_noaa.png', '3072x2304', 'RPCS3', ['No MSAA', 'AF x16']),
+                        img('400_noaa.png', '4096x3072', 'RPCS3', ['No MSAA', 'AF x16']),
+                        img('500_noaa.png', '5120x3840', 'RPCS3', ['No MSAA', 'AF x16'])
+                    ]
+                }
+            ]
         }
     ]
 };
