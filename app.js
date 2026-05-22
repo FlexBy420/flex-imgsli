@@ -5,6 +5,8 @@ let isMagOn = false;
 
 let currentPathA = '';
 let currentPathB = '';
+let imageNaturalW = 1920;
+let imageNaturalH = 1080;
 
 let scale = 1;
 let translateX = 0;
@@ -14,12 +16,15 @@ let action = 'none';
 let sliderPercent = 50;
 let startMouseX = 0, startMouseY = 0;
 let startTransX = 0, startTransY = 0;
+let initialPinchDistance = 0;
+let initialScale = 1;
 
 let shroud, elSliderBase, elSliderOverlay, elSliderClipper, elHandle;
 let elSbsLeft, elSbsRight, labelL, labelR;
 let magMain, magL, magR;
 
-function init() {
+function init()
+{
     shroud = document.getElementById('viewer-shroud');
     elSliderBase = document.getElementById('img-base');
     elSliderOverlay = document.getElementById('img-overlay');
@@ -39,11 +44,14 @@ function init() {
     setupEventListeners();
 
     const params = new URLSearchParams(window.location.search);
-    if (params.has('g') && params.has('s')) {
+    if (params.has('g') && params.has('s'))
+    {
         const g = parseInt(params.get('g'));
         const s = parseInt(params.get('s'));
         loadGame(g, s); 
-    } else {
+    } 
+    else
+    {
         goHome();
     }
 
@@ -54,9 +62,27 @@ function init() {
 
     const copyBtn = document.getElementById('copyLinkBtn');
     if (copyBtn) copyBtn.addEventListener('click', copyShareLink);
+
+    document.addEventListener('fullscreenchange', () =>
+    {
+        const fsBtn = document.getElementById('fsBtn');
+        if (fsBtn) fsBtn.classList.toggle('on', !!document.fullscreenElement);
+        setTimeout(refreshSlider, 50);
+    });
+    document.addEventListener('webkitfullscreenchange', () =>
+    {
+        const fsBtn = document.getElementById('fsBtn');
+        if (fsBtn) fsBtn.classList.toggle('on', !!document.webkitFullscreenElement);
+        setTimeout(refreshSlider, 50);
+    });
+
+    // Sidebar overlay close
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
 }
 
-function buildNavAndHome() {
+function buildNavAndHome()
+{
     const nav = document.getElementById('game-nav');
     const homeGrid = document.getElementById('home-game-grid');
     if (!nav || !homeGrid) return;
@@ -65,20 +91,24 @@ function buildNavAndHome() {
     homeGrid.innerHTML = '';
 
     const sortedGames = [...CONFIG.games].sort((a, b) => a.name.localeCompare(b.name));
-    sortedGames.forEach((game) => {
+    sortedGames.forEach((game) =>
+    {
         const gameIdx = CONFIG.games.indexOf(game);
         const card = document.createElement('div');
         card.className = 'grid-card';
         card.onclick = () => loadGame(gameIdx);
 
-        if (game.icon) {
+        if (game.icon)
+        {
             const img = document.createElement('img');
             img.src = game.icon;
             img.className = 'game-icon';
             img.loading = 'lazy';
             img.alt = `${game.name} icon`;
             card.appendChild(img);
-        } else {
+        } 
+        else
+        {
             const placeholder = document.createElement('div');
             placeholder.className = 'game-icon-placeholder';
             placeholder.innerText = '🎮';
@@ -105,12 +135,14 @@ function buildNavAndHome() {
         sceneList.className = 'scene-list';
         sceneList.id = `scene-list-${gameIdx}`;
 
-        game.scenes.forEach((scene, sceneIdx) => {
+        game.scenes.forEach((scene, sceneIdx) =>
+        {
             const sceneBtn = document.createElement('button');
             sceneBtn.className = 'scene-btn';
             sceneBtn.innerText = scene.name;
             sceneBtn.id = `btn-scene-${gameIdx}-${sceneIdx}`;
-            sceneBtn.onclick = (e) => {
+            sceneBtn.onclick = (e) =>
+            {
                 e.stopPropagation(); 
                 loadScene(gameIdx, sceneIdx);
             };
@@ -123,7 +155,8 @@ function buildNavAndHome() {
     });
 }
 
-function goHome() {
+function goHome()
+{
     document.getElementById('home-view').style.display = 'flex';
     document.getElementById('app-view').style.display = 'none';
     document.getElementById('image-selectors').style.display = 'none';
@@ -140,7 +173,8 @@ function goHome() {
     window.history.replaceState({}, '', window.location.pathname);
 }
 
-function loadGame(gameIdx, targetSceneIdx = 0) {
+function loadGame(gameIdx, targetSceneIdx = 0)
+{
     document.getElementById('home-view').style.display = 'none';
     document.getElementById('app-view').style.display = 'flex';
 
@@ -153,10 +187,24 @@ function loadGame(gameIdx, targetSceneIdx = 0) {
     loadScene(gameIdx, targetSceneIdx);
 
     const sidebar = document.getElementById('sidebar');
-    sidebar.classList.add('visible');
+    const menuBtn = document.getElementById('menuBtn');
+
+    if (window.innerWidth > 900)
+    {
+        sidebar.classList.add('visible');
+        if(menuBtn) menuBtn.classList.add('active');
+    } 
+    else
+    {
+        sidebar.classList.remove('visible');
+        if(menuBtn) menuBtn.classList.remove('active');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (overlay) overlay.style.display = 'none';
+    }
 }
 
-function loadScene(gameIdx, sceneIdx) {
+function loadScene(gameIdx, sceneIdx)
+{
     currentViewData.gameIdx = gameIdx;
     currentViewData.sceneIdx = sceneIdx;
     
@@ -164,6 +212,15 @@ function loadScene(gameIdx, sceneIdx) {
     const activeSceneBtn = document.getElementById(`btn-scene-${gameIdx}-${sceneIdx}`);
     if (activeSceneBtn) activeSceneBtn.classList.add('active');
 
+    if (window.innerWidth <= 900)
+    {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.remove('visible');
+        const menuBtn = document.getElementById('menuBtn');
+        if (menuBtn) menuBtn.classList.remove('active');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (overlay) overlay.style.display = 'none';
+    }
     const scene = CONFIG.games[gameIdx].scenes[sceneIdx];
     const selLeft = document.getElementById('select-left');
     const selRight = document.getElementById('select-right');
@@ -171,12 +228,14 @@ function loadScene(gameIdx, sceneIdx) {
     selLeft.innerHTML = '';
     selRight.innerHTML = '';
 
-    scene.images.forEach((imgObj, idx) => {
+    scene.images.forEach((imgObj, idx) =>
+    {
         const game = CONFIG.games[gameIdx];
         const plat = imgObj.platform || game.platform || 'N/A';
 
         let dropdownText = `[${plat}] ${imgObj.label}`;
-        if (imgObj.tags && imgObj.tags.length > 0) {
+        if (imgObj.tags && imgObj.tags.length > 0)
+        {
             dropdownText += ` (${imgObj.tags.join(', ')})`;
         }
 
@@ -195,7 +254,8 @@ function loadScene(gameIdx, sceneIdx) {
     let startL = 0;
     let startR = scene.images.length > 1 ? 1 : 0;
     
-    if (params.get('g') == gameIdx && params.get('s') == sceneIdx) {
+    if (params.get('g') == gameIdx && params.get('s') == sceneIdx)
+    {
         if (params.has('l')) startL = parseInt(params.get('l'));
         if (params.has('r')) startR = parseInt(params.get('r'));
     }
@@ -208,7 +268,8 @@ function loadScene(gameIdx, sceneIdx) {
     changeImageSelection();
 }
 
-function changeImageSelection() {
+function changeImageSelection()
+{
     const gameIdx = currentViewData.gameIdx;
     const sceneIdx = currentViewData.sceneIdx;
     if (gameIdx === null || sceneIdx === null) return;
@@ -225,16 +286,22 @@ function changeImageSelection() {
     currentPathA = scene.path + imgL.fileName; // left
     currentPathB = scene.path + imgR.fileName; // right
 
+    const tmpImg = new Image();
+    tmpImg.onload = () => { imageNaturalW = tmpImg.naturalWidth; imageNaturalH = tmpImg.naturalHeight; };
+    tmpImg.src = currentPathA;
+
     elSliderBase.style.backgroundImage = `url(${currentPathB})`;
     elSliderOverlay.style.backgroundImage = `url(${currentPathA})`;
     elSbsLeft.style.backgroundImage = `url(${currentPathA})`;
     elSbsRight.style.backgroundImage = `url(${currentPathB})`;
 
-    const buildTags = (imgObj, isRightSide) => {
+    const buildTags = (imgObj, isRightSide) =>
+    {
         let html = '';
         const plat = imgObj.platform || game.platform || '';
         if (plat) html += `<span class="plat-tag ${isRightSide ? 'right' : ''}">${plat}</span>`;
-        if (imgObj.tags && imgObj.tags.length > 0) {
+        if (imgObj.tags && imgObj.tags.length > 0)
+        {
             imgObj.tags.forEach(tag => { html += `<span class="feature-tag">${tag}</span>`; });
         }
         return html;
@@ -254,29 +321,44 @@ function changeImageSelection() {
     setTimeout(refreshSlider, 50);
 }
 
-function toggleSidebar() {
+function getPinchDistance(touches)
+{
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+function toggleSidebar()
+{
     const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('visible');
+    const isVisible = sidebar.classList.toggle('visible');
     
     const menuBtn = document.getElementById('menuBtn');
-    menuBtn.classList.toggle('active', !sidebar.classList.contains('visible'));
+    if (menuBtn) menuBtn.classList.toggle('active', isVisible);
+
+    const overlay = document.getElementById('sidebar-overlay');
+    if (overlay) overlay.style.display = (isVisible && window.innerWidth <= 900) ? 'block' : 'none';
 
     setTimeout(refreshSlider, 310); 
 }
 
-function applyTransform() {
+function applyTransform()
+{
     const transformStr = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-    [elSliderBase, elSliderOverlay, elSbsLeft, elSbsRight].forEach(el => {
+    [elSliderBase, elSliderOverlay, elSbsLeft, elSbsRight].forEach(el =>
+    {
         if (el) el.style.transform = transformStr;
     });
 }
 
-function resetZoomAndPan() {
+function resetZoomAndPan()
+{
     scale = 1; translateX = 0; translateY = 0;
     applyTransform();
 }
 
-function updateSliderByPixels(mouseX) {
+function updateSliderByPixels(mouseX)
+{
     const rect = shroud.getBoundingClientRect();
     let x = mouseX - rect.left;
     x = Math.max(0, Math.min(x, rect.width));
@@ -284,75 +366,113 @@ function updateSliderByPixels(mouseX) {
     refreshSlider();
 }
 
-function refreshSlider() {
+function refreshSlider()
+{
     if (!elSliderClipper || !elHandle) return;
     elSliderClipper.style.clipPath = `inset(0 ${100 - sliderPercent}% 0 0)`;
     elHandle.style.left = `${sliderPercent}%`;
 }
 
-function handleMagnifierLogic(e) {
-    if (!isMagOn || action !== 'none' || currentViewData.gameIdx === null) {
+function getRenderedSize(containerW, containerH)
+{
+    const imgAR = imageNaturalW / imageNaturalH;
+    const paneAR = containerW / containerH;
+    let rendW, rendH, offX, offY;
+    if (imgAR > paneAR)
+    {
+        rendW = containerW; rendH = containerW / imgAR;
+        offX = 0;           offY = (containerH - rendH) / 2;
+    }
+    else
+    {
+        rendH = containerH; rendW = containerH * imgAR;
+        offX = (containerW - rendW) / 2; offY = 0;
+    }
+    return { rendW, rendH, offX, offY };
+}
+
+function handleMagnifierLogic(e)
+{
+    if (!isMagOn || action !== 'none' || currentViewData.gameIdx === null)
+    {
         hideAllMags();
         return;
     }
 
     const rect = shroud.getBoundingClientRect();
 
-    if (viewMode === 'slider') {
+    if (viewMode === 'slider')
+    {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+        if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height)
+        {
             magMain.style.display = 'block';
             magMain.style.left = (x - 110) + "px";
             magMain.style.top = (y - 110) + "px";
 
-            const unscaledX = (x - translateX) / scale;
-            const unscaledY = (y - translateY) / scale;
-
+            const { rendW, rendH, offX, offY } = getRenderedSize(rect.width, rect.height);
+            const imgX = (x - translateX - offX) / scale;
+            const imgY = (y - translateY - offY) / scale;
             const currentMousePercent = (x / rect.width) * 100;
             const activeImg = (currentMousePercent < sliderPercent) ? currentPathA : currentPathB;
 
             magMain.style.backgroundImage = `url(${activeImg})`;
-            magMain.style.backgroundSize = `${rect.width * scale * 2}px ${rect.height * scale * 2}px`;
-            magMain.style.backgroundPosition = `-${(unscaledX * scale * 2) - 110}px -${(unscaledY * scale * 2) - 110}px`;
-        } else {
+            magMain.style.backgroundSize = `${rendW * scale * 2}px ${rendH * scale * 2}px`;
+            magMain.style.backgroundPosition = `-${(imgX * scale * 2) - 110}px -${(imgY * scale * 2) - 110}px`;
+        } 
+        else
+        {
             magMain.style.display = 'none';
         }
-    } else {
+    } 
+    else
+    {
         const pane = e.target.closest('.sbs-pane');
-        if (pane) {
+        if (pane)
+        {
             magL.style.display = 'block';
             magR.style.display = 'block';
             const paneRect = pane.getBoundingClientRect();
             const x = e.clientX - paneRect.left;
             const y = e.clientY - paneRect.top;
 
-            [magL, magR].forEach((m, i) => {
+            const { rendW, rendH, offX, offY } = getRenderedSize(paneRect.width, paneRect.height);
+
+            [magL, magR].forEach((m, i) =>
+            {
                 m.style.left = (x - 110) + "px";
                 m.style.top = (y - 110) + "px";
-                const unscaledX = (x - translateX) / scale;
-                const unscaledY = (y - translateY) / scale;
+                const imgX = (x - translateX - offX) / scale;
+                const imgY = (y - translateY - offY) / scale;
                 const img = (i === 0) ? currentPathA : currentPathB;
                 m.style.backgroundImage = `url(${img})`;
-                m.style.backgroundSize = `${paneRect.width * scale * 2}px ${paneRect.height * scale * 2}px`;
-                m.style.backgroundPosition = `-${(unscaledX * scale * 2) - 110}px -${(unscaledY * scale * 2) - 110}px`;
+                m.style.backgroundSize = `${rendW * scale * 2}px ${rendH * scale * 2}px`;
+                m.style.backgroundPosition = `-${(imgX * scale * 2) - 110}px -${(imgY * scale * 2) - 110}px`;
             });
-        } else {
+        } 
+        else
+        {
             hideAllMags();
         }
     }
 }
 
-function setupEventListeners() {
-    shroud.addEventListener('mousedown', e => {
+function setupEventListeners()
+{
+    shroud.addEventListener('mousedown', e =>
+    {
         const rect = shroud.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const currentSliderPx = (sliderPercent / 100) * rect.width;
 
-        if (viewMode === 'slider' && Math.abs(mouseX - currentSliderPx) < 40) {
+        if (viewMode === 'slider' && Math.abs(mouseX - currentSliderPx) < 40)
+        {
             action = 'slider';
-        } else {
+        } 
+        else
+        {
             action = 'pan';
             startMouseX = e.clientX;
             startMouseY = e.clientY;
@@ -362,10 +482,14 @@ function setupEventListeners() {
         }
     });
 
-    window.addEventListener('mousemove', e => {
-        if (action === 'slider') {
+    window.addEventListener('mousemove', e =>
+    {
+        if (action === 'slider')
+        {
             updateSliderByPixels(e.clientX);
-        } else if (action === 'pan') {
+        } 
+        else if (action === 'pan')
+        {
             translateX = startTransX + (e.clientX - startMouseX);
             translateY = startTransY + (e.clientY - startMouseY);
             applyTransform();
@@ -373,23 +497,27 @@ function setupEventListeners() {
         handleMagnifierLogic(e);
     });
 
-    window.addEventListener('mouseup', () => {
+    window.addEventListener('mouseup', () =>
+    {
         action = 'none';
         shroud.style.cursor = 'crosshair';
     });
 
-    shroud.addEventListener('wheel', e => {
+    shroud.addEventListener('wheel', e =>
+    {
         e.preventDefault();
         const zoomSpeed = 0.15;
         const delta = e.deltaY > 0 ? -zoomSpeed : zoomSpeed;
         const newScale = Math.min(Math.max(1, scale + delta * scale), 15);
 
-        if (newScale !== scale) {
+        if (newScale !== scale)
+        {
             const rect = shroud.getBoundingClientRect();
             let cursorX = e.clientX - rect.left;
             let cursorY = e.clientY - rect.top;
 
-            if (viewMode === 'sbs') {
+            if (viewMode === 'sbs')
+            {
                 const pane = e.target.closest('.sbs-pane');
                 if (pane) cursorX = e.clientX - pane.getBoundingClientRect().left;
             }
@@ -404,7 +532,94 @@ function setupEventListeners() {
         }
     }, { passive: false });
 
-    window.addEventListener('keydown', e => {
+    shroud.addEventListener('touchstart', e =>
+    {
+        if (e.touches.length === 1)
+        {
+            const rect = shroud.getBoundingClientRect();
+            const touchX = e.touches[0].clientX - rect.left;
+            const currentSliderPx = (sliderPercent / 100) * rect.width;
+
+            if (viewMode === 'slider' && Math.abs(touchX - currentSliderPx) < 60)
+            {
+                action = 'slider';
+            } 
+            else
+            {
+                action = 'pan';
+                startMouseX = e.touches[0].clientX;
+                startMouseY = e.touches[0].clientY;
+                startTransX = translateX;
+                startTransY = translateY;
+            }
+        } 
+        else if (e.touches.length === 2)
+        {
+            action = 'zoom';
+            initialPinchDistance = getPinchDistance(e.touches);
+            initialScale = scale;
+        }
+    }, { passive: false });
+
+    window.addEventListener('touchmove', e =>
+    {
+        if (e.target.closest('#viewer-shroud'))
+        {
+            e.preventDefault();
+        }
+
+        if (action === 'slider' && e.touches.length === 1)
+        {
+            updateSliderByPixels(e.touches[0].clientX);
+        } 
+        else if (action === 'pan' && e.touches.length === 1)
+        {
+            translateX = startTransX + (e.touches[0].clientX - startMouseX);
+            translateY = startTransY + (e.touches[0].clientY - startMouseY);
+            applyTransform();
+        } 
+        else if (action === 'zoom' && e.touches.length === 2)
+        {
+            const currentDistance = getPinchDistance(e.touches);
+            const pinchRatio = currentDistance / initialPinchDistance;
+            const newScale = Math.min(Math.max(1, initialScale * pinchRatio), 15);
+
+            if (newScale !== scale)
+            {
+                const rect = shroud.getBoundingClientRect();
+                const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+
+                let cursorX = midX - rect.left;
+                let cursorY = midY - rect.top;
+
+                translateX = cursorX - (cursorX - translateX) * (newScale / scale);
+                translateY = cursorY - (cursorY - translateY) * (newScale / scale);
+
+                scale = newScale;
+                applyTransform();
+            }
+        }
+    }, { passive: false });
+
+    window.addEventListener('touchend', e =>
+    {
+        if (e.touches.length === 0)
+        {
+            action = 'none';
+        } 
+        else if (e.touches.length === 1)
+        {
+            action = 'pan';
+            startMouseX = e.touches[0].clientX;
+            startMouseY = e.touches[0].clientY;
+            startTransX = translateX;
+            startTransY = translateY;
+        }
+    });
+
+    window.addEventListener('keydown', e =>
+    {
         const key = e.key.toLowerCase();
         if (key === 'z') toggleMagnifier();
         if (key === 'v') toggleViewMode();
@@ -413,34 +628,40 @@ function setupEventListeners() {
     });
 }
 
-function toggleViewMode() {
+function toggleViewMode()
+{
     viewMode = (viewMode === 'slider') ? 'sbs' : 'slider';
     document.getElementById('slider-view').style.display = (viewMode === 'slider') ? 'block' : 'none';
-    document.getElementById('sbs-view').style.display = (viewMode === 'sbs') ? 'grid' : 'none';
+    document.getElementById('sbs-view').style.display = (viewMode === 'sbs') ? 'flex' : 'none';
     document.getElementById('viewBtn').innerText = `Mode: ${viewMode.toUpperCase()}`;
     hideAllMags();
     applyTransform();
 }
 
-function toggleMagnifier() {
+function toggleMagnifier()
+{
     isMagOn = !isMagOn;
     document.getElementById('magBtn').classList.toggle('on', isMagOn);
     hideAllMags();
 }
 
-function hideAllMags() {
+function hideAllMags()
+{
     [magMain, magL, magR].forEach(m => { if(m) m.style.display = 'none'; });
 }
 
-function copyShareLink() {
-    navigator.clipboard.writeText(window.location.href).then(() => {
+function copyShareLink()
+{
+    navigator.clipboard.writeText(window.location.href).then(() =>
+    {
         const btn = document.getElementById('copyLinkBtn');
         const originalText = btn.innerHTML;
         btn.innerHTML = '✅ Copied!';
         btn.style.backgroundColor = '#28a745';
         btn.style.borderColor = '#28a745';
         
-        setTimeout(() => {
+        setTimeout(() =>
+        {
             btn.innerHTML = originalText;
             btn.style.backgroundColor = '';
             btn.style.borderColor = '';
@@ -448,15 +669,45 @@ function copyShareLink() {
     });
 }
 
-function toggleFullscreen() {
-    const elem = document.getElementById('app-view');
+function toggleFullscreen()
+{
+    const shroud = document.getElementById('viewer-shroud');
+    const fsExitBtn = document.getElementById('fs-exit-btn');
 
-    if (!document.fullscreenElement) {
-        elem.requestFullscreen().catch(err => {
-            alert(`Error: ${err.message}`);
+    if (shroud.classList.contains('fake-fullscreen'))
+    {
+        shroud.classList.remove('fake-fullscreen');
+        document.getElementById('fsBtn').classList.remove('on');
+        if (fsExitBtn) fsExitBtn.style.display = 'none';
+        setTimeout(refreshSlider, 50);
+        return;
+    }
+
+    if (document.fullscreenElement || document.webkitFullscreenElement)
+    {
+        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        return;
+    }
+
+    const target = document.getElementById('app-view');
+    const requestFS = target.requestFullscreen || target.webkitRequestFullscreen;
+
+    if (requestFS)
+    {
+        requestFS.call(target).catch(() =>
+        {
+            shroud.classList.add('fake-fullscreen');
+            document.getElementById('fsBtn').classList.add('on');
+            if (fsExitBtn) fsExitBtn.style.display = 'flex';
+            setTimeout(refreshSlider, 50);
         });
-    } else {
-        document.exitFullscreen();
+    } 
+    else 
+    {
+        shroud.classList.add('fake-fullscreen');
+        document.getElementById('fsBtn').classList.add('on');
+        if (fsExitBtn) fsExitBtn.style.display = 'flex';
+        setTimeout(refreshSlider, 50);
     }
 }
 
