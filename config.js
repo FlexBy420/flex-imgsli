@@ -318,6 +318,24 @@ const CONFIG = {
                     ]
                 }
             ]
+        },
+{
+            name: 'White Knight Chronicles', // tested on BCJS30030 1.00
+            icon: 'img/wkc/ICON0.PNG',
+            scenes: [
+                {
+                    name: 'Scene 1',
+                    path: 'img/wkc/1/',
+                    images: [
+                        img('720.png', '1280x720', 'RPCS3'),
+                        img('720_af16.png', '1280x720', 'RPCS3', ['AF x16']),
+                        img('1080_af16.png', '1920x1080', 'RPCS3', ['AF x16']),
+                        img('1440_af16.png', '2560x1440', 'RPCS3', ['AF x16']),
+                        img('2160_af16.png', '3840x2160', 'RPCS3', ['AF x16']),
+                        img('2880_af16.png', '5120x2880', 'RPCS3', ['AF x16'])
+                    ]
+                }
+            ]
         }
     ]
 };
